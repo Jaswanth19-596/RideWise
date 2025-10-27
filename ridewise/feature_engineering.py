@@ -10,7 +10,6 @@ with open('params.yaml') as stream:
         print(exc)
 
 train_data_percentage = params['feature_engineering']['train_data_percentage']
-val_data_percentage = params['feature_engineering']['val_data_percentage']
 test_data_percentage = params['feature_engineering']['test_data_percentage']
 
 
@@ -20,18 +19,15 @@ data_path = os.path.join(PROJECT_ROOT, 'data', 'processed', 'data.csv')
 df = pd.read_csv(data_path, parse_dates = ['tpep_pickup_datetime'])
 df = df.set_index('tpep_pickup_datetime')
 
-# Splitting the data into train, test, val splits
+# Splitting the data into train, test splits
 date_series = pd.to_datetime(pd.Series(df.index))
 
 train_end_date = date_series.quantile(train_data_percentage)
-val_end_date = date_series.quantile(train_data_percentage + val_data_percentage)
 
 train_df = df.loc[df.index <= train_end_date].copy()
-val_df = df[(df.index > train_end_date) & (df.index <= val_end_date)].copy()
-test_df = df[df.index > val_end_date].copy()
+test_df = df[df.index > train_end_date].copy()
 
 print(f"Train: {train_df.index.min()} to {train_df.index.max()} ({len(train_df)} rows)")
-print(f"Val:   {val_df.index.min()} to {val_df.index.max()} ({len(val_df)} rows)")
 print(f"Test:  {test_df.index.min()} to {test_df.index.max()} ({len(test_df)} rows)")
 
 
@@ -106,23 +102,21 @@ def create_time_series_features(df, is_train = False, train_stats = None):
 
 train_featured, train_stats = create_time_series_features(train_df, is_train = True)
 
-val_featured, _ = create_time_series_features(val_df, train_stats = train_stats)
 
 test_featured, _ = create_time_series_features(test_df, train_stats = train_stats)
 
 # Drop rows with NaN (from lag features at the beginning)
 initial_train_size = len(train_featured)
 train_featured = train_featured.dropna()
-val_featured = val_featured.dropna()
+
 test_featured = test_featured.dropna()
 
 print(f"\n✓ Dropped {initial_train_size - len(train_featured)} rows with NaN (from lag features)")
-print(f"✓ Final shapes: Train={train_featured.shape}, Val={val_featured.shape}, Test={test_featured.shape}")
+print(f"✓ Final shapes: Train={train_featured.shape}, Test={test_featured.shape}")
 
 
 SAVE_PATH = os.path.join(PROJECT_ROOT, 'data', 'processed')
 train_featured.to_csv(os.path.join(SAVE_PATH, 'train.csv'))
-val_featured.to_csv(os.path.join(SAVE_PATH, 'val.csv'))
 test_featured.to_csv(os.path.join(SAVE_PATH, 'test.csv'))
 
 

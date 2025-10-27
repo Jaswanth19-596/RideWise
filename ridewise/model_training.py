@@ -29,12 +29,10 @@ mlflow.set_experiment("/Users/madhajaswanth@gmail.com/RideWise")
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 train_path = os.path.join(PROJECT_ROOT, 'data', 'processed', 'train.csv')
-val_path = os.path.join(PROJECT_ROOT, 'data', 'processed', 'val.csv')
 test_path = os.path.join(PROJECT_ROOT, 'data', 'processed', 'test.csv')
 
 
 train_featured = pd.read_csv(train_path, index_col = 'tpep_pickup_datetime')
-val_featured = pd.read_csv(val_path, index_col = 'tpep_pickup_datetime')
 test_featured = pd.read_csv(test_path, index_col = 'tpep_pickup_datetime')
 
 
@@ -46,8 +44,6 @@ feature_cols.remove('total_pickups')
 X_train = train_featured[feature_cols]
 y_train = train_featured['total_pickups']
 
-X_val = val_featured[feature_cols]
-y_val = val_featured['total_pickups']
 
 X_test = test_featured[feature_cols]
 y_test = test_featured['total_pickups']
@@ -60,7 +56,6 @@ encoder = ColumnTransformer([
 ], remainder="passthrough")
 
 X_train_encoded = encoder.fit_transform(X_train)
-X_val_encoded = encoder.transform(X_val)
 X_test_encoded = encoder.transform(X_test)
 
 
@@ -71,25 +66,20 @@ model = XGBRegressor(**params)
 model.fit(X_train_encoded, y_train)
 
 y_train_pred = model.predict(X_train_encoded)
-y_val_pred = model.predict(X_val_encoded)
 y_test_pred = model.predict(X_test_encoded)
 
 # Mean absolute percentage error
 train_mape = mean_absolute_percentage_error(y_train, y_train_pred)
-val_mape = mean_absolute_percentage_error(y_val, y_val_pred)
 test_mape = mean_absolute_percentage_error(y_test, y_test_pred)
 
 # Mean absolute error
 train_mae = mean_absolute_error(y_train, y_train_pred)
-val_mae = mean_absolute_error(y_val, y_val_pred)
 test_mae = mean_absolute_error(y_test, y_test_pred)
 
 metrics = {
     'Train MAPE': train_mape,
-    'Val MAPE': val_mape,
     'Test MAPE': test_mape,
     'Train MAE': train_mae,
-    'Val MAE': val_mae,
     'Test MAE': test_mae
 }
 
