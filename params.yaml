@@ -8,7 +8,7 @@ data_ingestion:
   min_fare_amount: 0.5
 
   max_trip_distance: 25
-  min_trip_distance: 0.25
+  min_trip_distance: 0.35
 
 data_preprocessing:
   chunk_size: 100000
@@ -22,7 +22,7 @@ feature_engineering:
 
 model_training:
   xg_boost:
-    colsample_bylevel: 0.7775133568129348
+    colsample_bylevel: 0.777513356812934
     colsample_bynode: 0.5276028563384744
     colsample_bytree: 0.831239701417107
     gamma: 0.4568672402027697

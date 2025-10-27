@@ -17,12 +17,7 @@ stages:
           max_fare_amount: 81
           min_fare_amount: 0.5
           max_trip_distance: 25
-          min_trip_distance: 0.25
-    outs:
-    - path: data/interim/data.csv
-      hash: md5
-      md5: e2c9db259e011d17952d34647402d2bf
-      size: 1890787379
+          min_trip_distance: 0.35
   data_preprocess:
     cmd: python ridewise/data_preprocessing.py
     deps:
@@ -48,8 +43,8 @@ stages:
     deps:
     - path: data/processed/data.csv
       hash: md5
-      md5: 81359533ba02baefe4cd6ce5baba954e
-      size: 6799837
+      md5: afec189f587e54a37a4eccb47302ceb6
+      size: 6801593
     params:
       params.yaml:
         feature_engineering:
@@ -59,36 +54,36 @@ stages:
     outs:
     - path: data/processed/test.csv
       hash: md5
-      md5: 0840f060e4c5f54cea2528e3bb37c23c
-      size: 6651546
+      md5: b42acddd2292ba8b1504616b2691c9b4
+      size: 6666081
     - path: data/processed/train.csv
       hash: md5
-      md5: 6678dd2990fa104ce9f5320a1ce5b1b8
-      size: 54032884
+      md5: 7b360881ed8624ad14b324bc342dfbb2
+      size: 54090548
     - path: data/processed/val.csv
       hash: md5
-      md5: 0032431b7a5a369ae8048cb4478f213f
-      size: 6666110
+      md5: f68f5bb12c99c0cccd3d9cee253c1191
+      size: 6668222
   model_training:
     cmd: python ridewise/model_training.py
     deps:
     - path: data/processed/test.csv
       hash: md5
-      md5: 0840f060e4c5f54cea2528e3bb37c23c
-      size: 6651546
+      md5: b42acddd2292ba8b1504616b2691c9b4
+      size: 6666081
     - path: data/processed/train.csv
       hash: md5
-      md5: 6678dd2990fa104ce9f5320a1ce5b1b8
-      size: 54032884
+      md5: 7b360881ed8624ad14b324bc342dfbb2
+      size: 54090548
     - path: data/processed/val.csv
       hash: md5
-      md5: 0032431b7a5a369ae8048cb4478f213f
-      size: 6666110
+      md5: f68f5bb12c99c0cccd3d9cee253c1191
+      size: 6668222
     params:
       params.yaml:
         model_training:
           xg_boost:
-            colsample_bylevel: 0.7775133568129348
+            colsample_bylevel: 0.777513356812934
             colsample_bynode: 0.5276028563384744
             colsample_bytree: 0.831239701417107
             gamma: 0.4568672402027697
@@ -106,15 +101,15 @@ stages:
     outs:
     - path: models/model.joblib
       hash: md5
-      md5: 44efdd51b46343f68a9517ad00964aaa
-      size: 475828
+      md5: 4150ed1c65d13af8a73cc5ade8cc3389
+      size: 473925
   data_preprocessing:
     cmd: python ridewise/data_preprocessing.py
     deps:
     - path: data/interim/data.csv
       hash: md5
-      md5: e2c9db259e011d17952d34647402d2bf
-      size: 1890787379
+      md5: e560ed40b1e96048d852ab0ec31bf607
+      size: 1872817539
     params:
       params.yaml:
         data_preprocessing:
@@ -124,13 +119,13 @@ stages:
     outs:
     - path: data/processed/data.csv
       hash: md5
-      md5: 81359533ba02baefe4cd6ce5baba954e
-      size: 6799837
+      md5: afec189f587e54a37a4eccb47302ceb6
+      size: 6801593
     - path: models/kmeans.joblib
       hash: md5
-      md5: 9db99a8febc2e11877fa9a5a95e51a00
-      size: 150243
+      md5: cc73718115293c2c0a0163959681ebb5
+      size: 86827
     - path: models/scaler.joblib
       hash: md5
-      md5: d221953beb292d28d90002ef3810134c
+      md5: 7c83d3e4a3397f7696bec9cb95e22e6f
       size: 951

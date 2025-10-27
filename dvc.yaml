@@ -5,8 +5,7 @@ stages:
       - ridewise/data_ingestion.py
     params:
       - data_ingestion
-    outs:
-      - data/interim/data.csv
+
   data_preprocessing:
     cmd: python ridewise/data_preprocessing.py
     deps:

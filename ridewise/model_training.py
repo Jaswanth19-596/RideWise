@@ -94,18 +94,25 @@ metrics = {
 }
 
 
-with mlflow.start_run():
+with mlflow.start_run() as run:
     # Log the parameters
     mlflow.log_params(params)
 
     # Log the model
     signature = infer_signature(X_train_encoded, y_train_pred)
-    mlflow.xgboost.log_model(model, signature = signature)
+    mlflow.xgboost.log_model(model, signature = signature, name = 'model')
 
     # Log the metrics
     mlflow.log_metrics(metrics)
+
+
+# Registering the model
+model_uri = f'runs:/{run.info.run_id}/model'
+model_name = "ridewise.development.xg_boost"
+model_version = mlflow.register_model(model_uri, model_name)
 
 # Save the scaler and the kmeans model
 MODEL_PATH = os.path.join(PROJECT_ROOT, 'models')
 os.makedirs(MODEL_PATH, exist_ok=True)
 joblib.dump(model, 'models/model.joblib')
+joblib.dump(encoder, 'models/encoder.joblib')
