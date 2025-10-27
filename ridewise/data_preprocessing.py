@@ -14,7 +14,7 @@ with open('params.yaml') as stream:
         print(exc)
 
 # Loading variables
-chunk_size = params['data_preprocessing']['chunksize']
+chunk_size = params['data_preprocessing']['chunk_size']
 n_clusters = params['data_preprocessing']['n_clusters']
 epsilon_val = params['data_preprocessing']['epsilon_val']
 

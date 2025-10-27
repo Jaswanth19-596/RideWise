@@ -64,7 +64,7 @@ X_val_encoded = encoder.transform(X_val)
 X_test_encoded = encoder.transform(X_test)
 
 
-xg_boost_params = params['model_training']['xgboost']
+xg_boost_params = params['model_training']['xg_boost']
 
 model = XGBRegressor(**params)
 

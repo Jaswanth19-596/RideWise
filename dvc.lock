@@ -5,8 +5,19 @@ stages:
     deps:
     - path: ridewise/data_ingestion.py
       hash: md5
-      md5: ad3aecaf8b465f2eb4ded14ef0a29b79
-      size: 2013
+      md5: eefa7d2e53714d5e3e6c2aa98d2373c3
+      size: 2448
+    params:
+      params.yaml:
+        data_ingestion:
+          min_latitude: 40.6
+          max_latitude: 40.85
+          min_longitude: -74.05
+          max_longitude: -73.7
+          max_fare_amount: 81
+          min_fare_amount: 0.5
+          max_trip_distance: 25
+          min_trip_distance: 0.25
     outs:
     - path: data/interim/data.csv
       hash: md5
@@ -37,38 +48,89 @@ stages:
     deps:
     - path: data/processed/data.csv
       hash: md5
-      md5: d59d29692e178eaaa4df0b2be45954a4
-      size: 6800239
+      md5: 81359533ba02baefe4cd6ce5baba954e
+      size: 6799837
+    params:
+      params.yaml:
+        feature_engineering:
+          train_data_percentage: 0.8
+          val_data_percentage: 0.1
+          test_data_percentage: 0.1
     outs:
     - path: data/processed/test.csv
       hash: md5
-      md5: 2179e02616b940e88b57d83ca6b7d36d
-      size: 6643179
+      md5: 0840f060e4c5f54cea2528e3bb37c23c
+      size: 6651546
     - path: data/processed/train.csv
       hash: md5
-      md5: 43e15d726e50d8870348954058337f30
-      size: 53960050
+      md5: 6678dd2990fa104ce9f5320a1ce5b1b8
+      size: 54032884
     - path: data/processed/val.csv
       hash: md5
-      md5: 09a6aeb9d73270bac5e41548e5b0bebd
-      size: 6659202
+      md5: 0032431b7a5a369ae8048cb4478f213f
+      size: 6666110
   model_training:
     cmd: python ridewise/model_training.py
     deps:
     - path: data/processed/test.csv
       hash: md5
-      md5: 2179e02616b940e88b57d83ca6b7d36d
-      size: 6643179
+      md5: 0840f060e4c5f54cea2528e3bb37c23c
+      size: 6651546
     - path: data/processed/train.csv
       hash: md5
-      md5: 43e15d726e50d8870348954058337f30
-      size: 53960050
+      md5: 6678dd2990fa104ce9f5320a1ce5b1b8
+      size: 54032884
     - path: data/processed/val.csv
       hash: md5
-      md5: 09a6aeb9d73270bac5e41548e5b0bebd
-      size: 6659202
+      md5: 0032431b7a5a369ae8048cb4478f213f
+      size: 6666110
+    params:
+      params.yaml:
+        model_training:
+          xg_boost:
+            colsample_bylevel: 0.7775133568129348
+            colsample_bynode: 0.5276028563384744
+            colsample_bytree: 0.831239701417107
+            gamma: 0.4568672402027697
+            grow_policy: depthwise
+            learning_rate: 0.09036709667822714
+            max_bin: 128
+            max_delta_step: 8.208718790843026
+            max_depth: 12
+            min_child_weight: 9
+            n_estimators: 784
+            reg_alpha: 6.82389041737408
+            reg_lambda: 8.066313006261286
+            scale_pos_weight: 1.9992550377663074
+            subsample: 0.7365551401220525
     outs:
     - path: models/model.joblib
       hash: md5
-      md5: 0210b268133754bc19d451d87c7e4dc6
-      size: 17916544
+      md5: 44efdd51b46343f68a9517ad00964aaa
+      size: 475828
+  data_preprocessing:
+    cmd: python ridewise/data_preprocessing.py
+    deps:
+    - path: data/interim/data.csv
+      hash: md5
+      md5: e2c9db259e011d17952d34647402d2bf
+      size: 1890787379
+    params:
+      params.yaml:
+        data_preprocessing:
+          chunk_size: 100000
+          n_clusters: 30
+          epsilon_val: 10
+    outs:
+    - path: data/processed/data.csv
+      hash: md5
+      md5: 81359533ba02baefe4cd6ce5baba954e
+      size: 6799837
+    - path: models/kmeans.joblib
+      hash: md5
+      md5: 9db99a8febc2e11877fa9a5a95e51a00
+      size: 150243
+    - path: models/scaler.joblib
+      hash: md5
+      md5: d221953beb292d28d90002ef3810134c
+      size: 951
