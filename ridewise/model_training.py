@@ -18,7 +18,7 @@ load_dotenv()
 mlflow.set_tracking_uri("databricks")
 
 # Set experiment in the tracking server
-mlflow.set_experiment("/Users/madhajaswanth@gmail.com/Uber_Demand_Prediction")
+mlflow.set_experiment("/Users/madhajaswanth@gmail.com/RideWise")
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 train_path = os.path.join(PROJECT_ROOT, 'data', 'processed', 'train.csv')

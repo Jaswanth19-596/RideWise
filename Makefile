@@ -2,7 +2,7 @@
 # GLOBALS                                                                       #
 #################################################################################
 
-PROJECT_NAME = uberdemandprediction
+PROJECT_NAME = RideWise
 PYTHON_VERSION = 3.10
 PYTHON_INTERPRETER = python
 

@@ -3,9 +3,9 @@ requires = ["flit_core >=3.2,<4"]
 build-backend = "flit_core.buildapi"
 
 [project]
-name = "uberdemandprediction"
+name = "RideWise"
 version = "0.0.1"
-description = "A ML model that predicts the demand for uber pickups 15 mins before, to increase the number ops for the driver and increasing the revenue."
+description = "A ML model that predicts the demand for ride pickups 15 mins before, to increase the number ops for the driver and increasing the revenue."
 authors = [
   { name = "Jaswanth Mada" },
 ]
@@ -20,13 +20,13 @@ requires-python = "~=3.10.0"
 
 [tool.ruff]
 line-length = 99
-src = ["uberdemandprediction"]
-include = ["pyproject.toml", "uberdemandprediction/**/*.py"]
+src = ["ridewise"]
+include = ["pyproject.toml", "ridewise/**/*.py"]
 
 [tool.ruff.lint]
 extend-select = ["I"]  # Add import sorting
 
 [tool.ruff.lint.isort]
-known-first-party = ["uberdemandprediction"]
+known-first-party = ["ridewise"]
 force-sort-within-sections = true
 

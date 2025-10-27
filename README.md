@@ -1,10 +1,10 @@
-# Uberdemandprediction
+# RideWise
 
 <a target="_blank" href="https://cookiecutter-data-science.drivendata.org/">
     <img src="https://img.shields.io/badge/CCDS-Project%20template-328F97?logo=cookiecutter" />
 </a>
 
-A ML model that predicts the demand for uber pickups 15 mins before, to increase the number ops for the driver and increasing the revenue.
+A ML model that predicts the demand for ride pickups 15 mins before, to increase the number ops for the driver and increasing the revenue.
 
 ## Project Organization
 
@@ -26,8 +26,8 @@ A ML model that predicts the demand for uber pickups 15 mins before, to increase
 │                         the creator's initials, and a short `-` delimited description, e.g.
 │                         `1.0-jqp-initial-data-exploration`.
 │
-├── pyproject.toml     <- Project configuration file with package metadata for 
-│                         uberdemandprediction and configuration for tools like black
+├── pyproject.toml     <- Project configuration file with package metadata for
+│                         ridewise and configuration for tools like black
 │
 ├── references         <- Data dictionaries, manuals, and all other explanatory materials.
 │
@@ -39,9 +39,9 @@ A ML model that predicts the demand for uber pickups 15 mins before, to increase
 │
 ├── setup.cfg          <- Configuration file for flake8
 │
-└── uberdemandprediction   <- Source code for use in this project.
+└── ridewise   <- Source code for use in this project.
     │
-    ├── __init__.py             <- Makes uberdemandprediction a Python module
+    ├── __init__.py             <- Makes ridewise a Python module
     │
     ├── config.py               <- Store useful variables and configuration
     │
@@ -49,13 +49,12 @@ A ML model that predicts the demand for uber pickups 15 mins before, to increase
     │
     ├── features.py             <- Code to create features for modeling
     │
-    ├── modeling                
-    │   ├── __init__.py 
-    │   ├── predict.py          <- Code to run model inference with trained models          
+    ├── modeling
+    │   ├── __init__.py
+    │   ├── predict.py          <- Code to run model inference with trained models
     │   └── train.py            <- Code to train models
     │
     └── plots.py                <- Code to create visualizations
 ```
 
---------
-
+---
