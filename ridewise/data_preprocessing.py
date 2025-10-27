@@ -5,20 +5,35 @@ from sklearn.cluster import MiniBatchKMeans
 from pathlib import Path
 import os
 import joblib
+import yaml
+
+with open('params.yaml') as stream:
+    try:
+        params = yaml.safe_load(stream)
+    except yaml.YAMLError as exc:
+        print(exc)
+
+# Loading variables
+chunk_size = params['data_preprocessing']['chunksize']
+n_clusters = params['data_preprocessing']['n_clusters']
+epsilon_val = params['data_preprocessing']['epsilon_val']
+
+
+
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 data_path = os.path.join(PROJECT_ROOT, 'data', 'interim', 'data.csv')
-data_reader = pd.read_csv(data_path, chunksize=100000, usecols = ['pickup_longitude', 'pickup_latitude'])
+data_reader = pd.read_csv(data_path, chunksize=chunk_size, usecols = ['pickup_longitude', 'pickup_latitude'])
 
 scaler = StandardScaler()
 for data_chunk in data_reader:
     scaler.partial_fit(data_chunk)
 
 
-kmeans = MiniBatchKMeans(n_clusters=30)
+kmeans = MiniBatchKMeans(n_clusters=n_clusters)
 
-data_reader = pd.read_csv(data_path, chunksize=100000, usecols = ['pickup_longitude', 'pickup_latitude'])
+data_reader = pd.read_csv(data_path, chunksize=chunk_size, usecols = ['pickup_longitude', 'pickup_latitude'])
 for data_chunk in data_reader:
     scaled_chunk = scaler.transform(data_chunk)
     kmeans.partial_fit(scaled_chunk)
@@ -52,7 +67,6 @@ resampled_data.columns = ['total_pickups']
 resampled_data = resampled_data.reset_index(level = 0)
 
 # Fill the missing values
-epsilon_val = 10
 resampled_data = resampled_data.replace({'total_pickups': {0 : epsilon_val}})
 
 # Save the dataframe

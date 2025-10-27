@@ -1,0 +1,39 @@
+data_ingestion:
+  min_latitude: 40.60
+  max_latitude: 40.85
+  min_longitude: -74.05
+  max_longitude: -73.70
+
+  max_fare_amount: 81
+  min_fare_amount: 0.5
+
+  max_trip_distance: 25
+  min_trip_distance: 0.25
+
+data_preprocessing:
+  chunk_size: 100000
+  n_clusters: 30
+  epsilon_val: 10
+
+feature_engineering:
+  train_data_percentage: 0.8
+  val_data_percentage: 0.1
+  test_data_percentage: 0.1
+
+model_training:
+  xg_boost:
+    colsample_bylevel: 0.7775133568129348
+    colsample_bynode: 0.5276028563384744
+    colsample_bytree: 0.831239701417107
+    gamma: 0.4568672402027697
+    grow_policy: depthwise
+    learning_rate: 0.09036709667822714
+    max_bin: 128
+    max_delta_step: 8.208718790843026
+    max_depth: 12
+    min_child_weight: 9
+    n_estimators: 784
+    reg_alpha: 6.82389041737408
+    reg_lambda: 8.066313006261286
+    scale_pos_weight: 1.9992550377663074
+    subsample: 0.7365551401220525

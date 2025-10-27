@@ -3,6 +3,29 @@ import numpy as np
 import dask.dataframe as dd
 from pathlib import Path
 import os
+import yaml
+
+with open('params.yaml') as stream:
+    try:
+        params = yaml.safe_load(stream)
+    except yaml.YAMLError as exc:
+        print(exc)
+
+
+# Defining bounding box of newyork
+min_latitude = params['data_ingestion']['min_latitude']
+max_latitude = params['data_ingestion']['max_latitude']
+min_longitude = params['data_ingestion']['min_longitude']
+max_longitude = params['data_ingestion']['max_longitude']
+
+# Defining max and min fare amount
+max_fare_amount = params['data_ingestion']['max_fare_amount']
+min_fare_amount = params['data_ingestion']['min_fare_amount']
+
+# Defining max and min trip distance
+max_trip_distance = params['data_ingestion']['max_trip_distance']
+min_trip_distance = params['data_ingestion']['min_trip_distance']
+
 
 # Defining the project root and Data paths
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -25,25 +48,7 @@ mar_df = dd.read_csv(mar_path, assume_missing = True, usecols = use_columns)
 # Concatenating the dataframes into one
 df = dd.concat([jan_df, feb_df, mar_df], axis = 0)
 
-
-# Removing outliers
-
-# Defining bounding box of newyork
-min_latitude = 40.60
-max_latitude = 40.85
-min_longitude = -74.05
-max_longitude = -73.70
-
-# Defining max and min fare amount
-max_fare_amount = 81
-min_fare_amount = 0.5
-
-# Defining max and min trip distance
-max_trip_distance = 25
-min_trip_distance = 0.25
-
-
-# Dropping the outliers
+# Removing the outliers
 df = df.loc[df['pickup_latitude'].between(min_latitude, max_latitude) & df['pickup_longitude'].between(min_longitude, max_longitude) &
              df['dropoff_latitude'].between(min_latitude, max_latitude) & df['dropoff_longitude'].between(min_longitude, max_longitude) &
              df['fare_amount'].between(min_fare_amount, max_fare_amount) & df['trip_distance'].between(min_trip_distance, max_trip_distance)

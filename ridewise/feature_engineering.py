@@ -1,9 +1,18 @@
 import pandas as pd
 from pathlib import Path
 import os
+import yaml
 
-import warnings
-warnings.filterwarnings('ignore')
+with open('params.yaml') as stream:
+    try:
+        params = yaml.safe_load(stream)
+    except yaml.YAMLError as exc:
+        print(exc)
+
+train_data_percentage = params['feature_engineering']['train_data_percentage']
+val_data_percentage = params['feature_engineering']['val_data_percentage']
+test_data_percentage = params['feature_engineering']['test_data_percentage']
+
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 data_path = os.path.join(PROJECT_ROOT, 'data', 'processed', 'data.csv')
@@ -14,8 +23,8 @@ df = df.set_index('tpep_pickup_datetime')
 # Splitting the data into train, test, val splits
 date_series = pd.to_datetime(pd.Series(df.index))
 
-train_end_date = date_series.quantile(0.8)
-val_end_date = date_series.quantile(0.9)
+train_end_date = date_series.quantile(train_data_percentage)
+val_end_date = date_series.quantile(train_data_percentage + val_data_percentage)
 
 train_df = df.loc[df.index <= train_end_date].copy()
 val_df = df[(df.index > train_end_date) & (df.index <= val_end_date)].copy()

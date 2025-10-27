@@ -1,7 +1,6 @@
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder
 import pandas as pd
-import numpy as np
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.metrics import mean_absolute_percentage_error, mean_absolute_error
@@ -12,6 +11,13 @@ import mlflow
 from mlflow.models import infer_signature
 from dotenv import load_dotenv
 import joblib
+import yaml
+
+with open('params.yaml') as stream:
+    try:
+        params = yaml.safe_load(stream)
+    except yaml.YAMLError as exc:
+        print(exc)
 
 load_dotenv()
 
@@ -58,24 +64,7 @@ X_val_encoded = encoder.transform(X_val)
 X_test_encoded = encoder.transform(X_test)
 
 
-params = {
-    "colsample_bylevel": 0.7775133568129348,
-    "colsample_bynode": 0.5276028563384744,
-    "colsample_bytree": 0.831239701417107,
-    "gamma": 0.4568672402027697,
-    "grow_policy": "depthwise",
-    "learning_rate": 0.09036709667822714,
-    "max_bin": 128,
-    "max_delta_step": 8.208718790843026,
-    "max_depth": 12,
-    "min_child_weight": 9,
-    "n_estimators": 784,
-    "reg_alpha": 6.82389041737408,
-    "reg_lambda": 8.066313006261286,
-    "scale_pos_weight": 1.9992550377663074,
-    "subsample": 0.7365551401220525
-}
-
+xg_boost_params = params['model_training']['xgboost']
 
 model = XGBRegressor(**params)
 

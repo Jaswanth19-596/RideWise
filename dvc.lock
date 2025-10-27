@@ -1,0 +1,74 @@
+schema: '2.0'
+stages:
+  data_ingestion:
+    cmd: python ridewise/data_ingestion.py
+    deps:
+    - path: ridewise/data_ingestion.py
+      hash: md5
+      md5: ad3aecaf8b465f2eb4ded14ef0a29b79
+      size: 2013
+    outs:
+    - path: data/interim/data.csv
+      hash: md5
+      md5: e2c9db259e011d17952d34647402d2bf
+      size: 1890787379
+  data_preprocess:
+    cmd: python ridewise/data_preprocessing.py
+    deps:
+    - path: data/interim/data.csv
+      hash: md5
+      md5: e2c9db259e011d17952d34647402d2bf
+      size: 1890787379
+    outs:
+    - path: data/processed/data.csv
+      hash: md5
+      md5: d59d29692e178eaaa4df0b2be45954a4
+      size: 6800239
+    - path: models/kmeans.joblib
+      hash: md5
+      md5: bad05ae4a0301f3c56da2e1fa4842ce5
+      size: 150243
+    - path: models/scaler.joblib
+      hash: md5
+      md5: d221953beb292d28d90002ef3810134c
+      size: 951
+  feature_engineering:
+    cmd: python ridewise/feature_engineering.py
+    deps:
+    - path: data/processed/data.csv
+      hash: md5
+      md5: d59d29692e178eaaa4df0b2be45954a4
+      size: 6800239
+    outs:
+    - path: data/processed/test.csv
+      hash: md5
+      md5: 2179e02616b940e88b57d83ca6b7d36d
+      size: 6643179
+    - path: data/processed/train.csv
+      hash: md5
+      md5: 43e15d726e50d8870348954058337f30
+      size: 53960050
+    - path: data/processed/val.csv
+      hash: md5
+      md5: 09a6aeb9d73270bac5e41548e5b0bebd
+      size: 6659202
+  model_training:
+    cmd: python ridewise/model_training.py
+    deps:
+    - path: data/processed/test.csv
+      hash: md5
+      md5: 2179e02616b940e88b57d83ca6b7d36d
+      size: 6643179
+    - path: data/processed/train.csv
+      hash: md5
+      md5: 43e15d726e50d8870348954058337f30
+      size: 53960050
+    - path: data/processed/val.csv
+      hash: md5
+      md5: 09a6aeb9d73270bac5e41548e5b0bebd
+      size: 6659202
+    outs:
+    - path: models/model.joblib
+      hash: md5
+      md5: 0210b268133754bc19d451d87c7e4dc6
+      size: 17916544
