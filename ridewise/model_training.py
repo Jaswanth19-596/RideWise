@@ -11,6 +11,7 @@ from pathlib import Path
 import mlflow
 from mlflow.models import infer_signature
 from dotenv import load_dotenv
+import joblib
 
 load_dotenv()
 
@@ -115,6 +116,7 @@ with mlflow.start_run():
     # Log the metrics
     mlflow.log_metrics(metrics)
 
-
-
-
+# Save the scaler and the kmeans model
+MODEL_PATH = os.path.join(PROJECT_ROOT, 'models')
+os.makedirs(MODEL_PATH, exist_ok=True)
+joblib.dump(model, 'models/model.joblib')
