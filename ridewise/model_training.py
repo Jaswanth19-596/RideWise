@@ -9,9 +9,11 @@ from xgboost import XGBRegressor
 from pathlib import Path
 import mlflow
 from mlflow.models import infer_signature
+from mlflow.tracking import MlflowClient
 from dotenv import load_dotenv
 import joblib
 import yaml
+
 
 with open('params.yaml') as stream:
     try:
@@ -98,8 +100,24 @@ with mlflow.start_run() as run:
 
 # Registering the model
 model_uri = f'runs:/{run.info.run_id}/model'
-model_name = "ridewise.development.xg_boost"
+model_name = "ridewise.development.xgboost"
 model_version = mlflow.register_model(model_uri, model_name)
+
+
+# Adding a alias to the model
+
+# Initialize the mlflow client
+client = MlflowClient()
+
+# Specify the alias
+ALIAS_NAME = "latest"
+
+# Set the alias on the new model
+client.set_registered_model_alias(
+    name = model_name,
+    alias = ALIAS_NAME,
+    version = model_version.version
+)
 
 # Save the scaler and the kmeans model
 MODEL_PATH = os.path.join(PROJECT_ROOT, 'models')
