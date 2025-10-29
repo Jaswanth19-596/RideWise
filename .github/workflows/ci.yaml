@@ -26,6 +26,7 @@ jobs:
 
       - name: Pull the Data
         run: |
+          dvc init
           dvc pull
 
       - name: Run Tests
