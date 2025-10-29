@@ -10,6 +10,7 @@ stages:
     cmd: python ridewise/data_preprocessing.py
     deps:
       - data/interim/data.csv
+      - ridewise/data_preprocessing.py
     params:
       - data_preprocessing
     outs:
@@ -20,6 +21,7 @@ stages:
     cmd: python ridewise/feature_engineering.py
     deps:
       - data/processed/data.csv
+      - ridewise/feature_engineering.py
     params:
       - feature_engineering
     outs:
@@ -28,6 +30,7 @@ stages:
   model_training:
     cmd: python ridewise/model_training.py
     deps:
+      - ridewise/model_training.py
       - data/processed/test.csv
       - data/processed/train.csv
     params:

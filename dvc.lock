@@ -43,33 +43,41 @@ stages:
     deps:
     - path: data/processed/data.csv
       hash: md5
-      md5: afec189f587e54a37a4eccb47302ceb6
-      size: 6801593
+      md5: e61a440583cdb5bd89d26842b0b2f1e4
+      size: 6798698
+    - path: ridewise/feature_engineering.py
+      hash: md5
+      md5: 96b04d2a52b28abe243714fcadc865be
+      size: 4170
     params:
       params.yaml:
         feature_engineering:
-          train_data_percentage: 0.9
-          test_data_percentage: 0.1
+          train_data_percentage: 0.7
+          test_data_percentage: 0.3
     outs:
     - path: data/processed/test.csv
       hash: md5
-      md5: c616cecc735242fb1929f0b492821efb
-      size: 6695346
+      md5: d2897a5027958c7290afa2bcc248c057
+      size: 19976742
     - path: data/processed/train.csv
       hash: md5
-      md5: a2beb7eb39bef32a0316f3688ca172f9
-      size: 61107665
+      md5: 301a24265b8c943285423666f320f384
+      size: 46612377
   model_training:
     cmd: python ridewise/model_training.py
     deps:
     - path: data/processed/test.csv
       hash: md5
-      md5: c616cecc735242fb1929f0b492821efb
-      size: 6695346
+      md5: d2897a5027958c7290afa2bcc248c057
+      size: 19976742
     - path: data/processed/train.csv
       hash: md5
-      md5: a2beb7eb39bef32a0316f3688ca172f9
-      size: 61107665
+      md5: 301a24265b8c943285423666f320f384
+      size: 46612377
+    - path: ridewise/model_training.py
+      hash: md5
+      md5: 3ce4f6117b3bdcfabcb0e29bcb298deb
+      size: 3142
     params:
       params.yaml:
         model_training:
@@ -92,8 +100,8 @@ stages:
     outs:
     - path: models/model.joblib
       hash: md5
-      md5: 5c97c873f0cdc53ec7c9919f13ee95f1
-      size: 481514
+      md5: 7c799c96228e4a9378f342ae2d401d18
+      size: 456001
   data_preprocessing:
     cmd: python ridewise/data_preprocessing.py
     deps:
@@ -101,6 +109,10 @@ stages:
       hash: md5
       md5: e560ed40b1e96048d852ab0ec31bf607
       size: 1872817539
+    - path: ridewise/data_preprocessing.py
+      hash: md5
+      md5: c1a770357a496bdd8448f88f5b1d88e3
+      size: 2470
     params:
       params.yaml:
         data_preprocessing:
@@ -110,11 +122,11 @@ stages:
     outs:
     - path: data/processed/data.csv
       hash: md5
-      md5: afec189f587e54a37a4eccb47302ceb6
-      size: 6801593
+      md5: e61a440583cdb5bd89d26842b0b2f1e4
+      size: 6798698
     - path: models/kmeans.joblib
       hash: md5
-      md5: cc73718115293c2c0a0163959681ebb5
+      md5: db0ffa2e4dcb000ecb41e025be07bd47
       size: 86827
     - path: models/scaler.joblib
       hash: md5

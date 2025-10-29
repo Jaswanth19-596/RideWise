@@ -1,0 +1,34 @@
+.stats-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 20px;
+  border-left: 4px solid;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  transition: all 0.3s ease;
+}
+
+.stats-card:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.stats-icon {
+  font-size: 2.5rem;
+}
+
+.stats-content h3 {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  margin-bottom: 5px;
+  color: #fff;
+}
+
+.stats-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}

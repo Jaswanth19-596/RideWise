@@ -1,0 +1,31 @@
+.region-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 15px 20px;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+}
+
+.region-selector label {
+  color: #fff;
+  font-weight: 500;
+}
+
+.region-selector select {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  outline: none;
+  min-width: 250px;
+}
+
+.region-selector select option {
+  background: #2a2a2a;
+  color: #fff;
+}

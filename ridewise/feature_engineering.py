@@ -29,6 +29,7 @@ test_df = df[df.index > train_end_date].copy()
 
 print(f"Train: {train_df.index.min()} to {train_df.index.max()} ({len(train_df)} rows)")
 print(f"Test:  {test_df.index.min()} to {test_df.index.max()} ({len(test_df)} rows)")
+print(f" Total {df.shape[0]} rows, Combination {train_df.shape[0] + test_df.shape[0]} rows")
 
 
 def create_time_series_features(df, is_train = False, train_stats = None):
@@ -118,6 +119,7 @@ print(f"✓ Final shapes: Train={train_featured.shape}, Test={test_featured.shap
 SAVE_PATH = os.path.join(PROJECT_ROOT, 'data', 'processed')
 train_featured.to_csv(os.path.join(SAVE_PATH, 'train.csv'))
 test_featured.to_csv(os.path.join(SAVE_PATH, 'test.csv'))
+train_stats.to_csv(os.path.join(SAVE_PATH, 'train_stats.csv'))
 
 
 
