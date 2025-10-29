@@ -36,3 +36,4 @@ stages:
       - model_training
     outs:
       - models/model.joblib
+      - models/encoder.joblib

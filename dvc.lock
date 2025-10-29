@@ -98,6 +98,10 @@ stages:
             scale_pos_weight: 1.9992550377663074
             subsample: 0.7365551401220525
     outs:
+    - path: models/encoder.joblib
+      hash: md5
+      md5: 55bbb88b4cc7e80950f38435a3a0c107
+      size: 3748
     - path: models/model.joblib
       hash: md5
       md5: 798ea7d7cbc938f657e9b5685f31db90
