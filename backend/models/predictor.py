@@ -6,6 +6,8 @@ from datetime import timedelta
 from pathlib import Path
 from backend.config import settings
 
+
+
 class TaxiDemandPredictor:
     def __init__(self):
         
@@ -61,6 +63,8 @@ class TaxiDemandPredictor:
     def predict(self, region_id: int) -> dict:
         """Generates the prediction and returns it as a dictionary with features."""
         
+        
+
         result_data = self.compute_features(region_id, self.get_simulation_time())
         
         if result_data.empty:
