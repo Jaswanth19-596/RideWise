@@ -35,6 +35,9 @@ jobs:
           dvc pull
 
       - name: Run Tests
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
         run: |
           pytest
 
