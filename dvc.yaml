@@ -9,7 +9,6 @@ stages:
   data_preprocessing:
     cmd: python ridewise/data_preprocessing.py
     deps:
-      - data/interim/data.csv
       - ridewise/data_preprocessing.py
     params:
       - data_preprocessing

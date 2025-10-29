@@ -43,8 +43,8 @@ stages:
     deps:
     - path: data/processed/data.csv
       hash: md5
-      md5: e61a440583cdb5bd89d26842b0b2f1e4
-      size: 6798698
+      md5: fc93fb3b16725222987d891ab3dd8181
+      size: 6804024
     - path: ridewise/feature_engineering.py
       hash: md5
       md5: 96b04d2a52b28abe243714fcadc865be
@@ -57,27 +57,27 @@ stages:
     outs:
     - path: data/processed/test.csv
       hash: md5
-      md5: d2897a5027958c7290afa2bcc248c057
-      size: 19976742
+      md5: 165f9f96935cf34b947a85e2d2607a62
+      size: 20001343
     - path: data/processed/train.csv
       hash: md5
-      md5: 301a24265b8c943285423666f320f384
-      size: 46612377
+      md5: 852c2f943d1f0aaecd76b28bd815e9a9
+      size: 46678291
   model_training:
     cmd: python ridewise/model_training.py
     deps:
     - path: data/processed/test.csv
       hash: md5
-      md5: d2897a5027958c7290afa2bcc248c057
-      size: 19976742
+      md5: 165f9f96935cf34b947a85e2d2607a62
+      size: 20001343
     - path: data/processed/train.csv
       hash: md5
-      md5: 301a24265b8c943285423666f320f384
-      size: 46612377
+      md5: 852c2f943d1f0aaecd76b28bd815e9a9
+      size: 46678291
     - path: ridewise/model_training.py
       hash: md5
-      md5: 257108c7589da644907d4fbd06f1c47d
-      size: 3469
+      md5: e536770fb55d1a96d85f3d2b4c695ac0
+      size: 3468
     params:
       params.yaml:
         model_training:
@@ -100,15 +100,11 @@ stages:
     outs:
     - path: models/model.joblib
       hash: md5
-      md5: 7c799c96228e4a9378f342ae2d401d18
-      size: 456001
+      md5: 798ea7d7cbc938f657e9b5685f31db90
+      size: 458453
   data_preprocessing:
     cmd: python ridewise/data_preprocessing.py
     deps:
-    - path: data/interim/data.csv
-      hash: md5
-      md5: e560ed40b1e96048d852ab0ec31bf607
-      size: 1872817539
     - path: ridewise/data_preprocessing.py
       hash: md5
       md5: c1a770357a496bdd8448f88f5b1d88e3
@@ -122,11 +118,11 @@ stages:
     outs:
     - path: data/processed/data.csv
       hash: md5
-      md5: e61a440583cdb5bd89d26842b0b2f1e4
-      size: 6798698
+      md5: fc93fb3b16725222987d891ab3dd8181
+      size: 6804024
     - path: models/kmeans.joblib
       hash: md5
-      md5: db0ffa2e4dcb000ecb41e025be07bd47
+      md5: 5a0bd06b66d2be669aab510a255cf958
       size: 86827
     - path: models/scaler.joblib
       hash: md5
