@@ -2,30 +2,37 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 15px 20px;
-  border-radius: 12px;
-  backdrop-filter: blur(10px);
+  background-color: var(--card-background);
+  padding: 12px 18px;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .region-selector label {
-  color: #fff;
+  color: var(--text-secondary);
   font-weight: 500;
+  font-size: 0.95rem;
 }
 
 .region-selector select {
-  padding: 10px 15px;
-  border: none;
+  padding: 9px 12px;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.2);
-  color: #fff;
-  font-size: 1rem;
+  background-color: #2a2a2a;
+  color: var(--text-primary);
+  font-size: 0.95rem;
   cursor: pointer;
   outline: none;
-  min-width: 250px;
+  min-width: 200px;
+  appearance: none; /* Remove default select arrow */
+  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%20viewBox%3D%220%200%20292.4%20292.4%22%3E%3Cpath%20fill%3D%22%23ffffff%22%20d%3D%22M287%2C197.9L159.3%2C69.2c-3.7-3.7-9.7-3.7-13.4%2C0L5.4%2C197.9c-3.7%2C3.7-3.7%2C9.7%2C0%2C13.4l13.4%2C13.4c3.9%2C3.9%2C10.1%2C3.9%2C14%2C0l110.7-110.7l110.7%2C110.7c3.9%2C3.9%2C10.1%2C3.9%2C14%2C0l13.4-13.4C290.7%2C207.6%2C290.7%2C201.6%2C287%2C197.9z%22%2F%3E%3C%2Fsvg%3E'); /* Custom arrow */
+  background-repeat: no-repeat;
+  background-position: right 10px top 50%;
+  background-size: 12px auto;
 }
 
 .region-selector select option {
-  background: #2a2a2a;
-  color: #fff;
+  background-color: #2a2a2a;
+  color: var(--text-primary);
 }

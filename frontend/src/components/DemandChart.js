@@ -12,21 +12,20 @@ import {
 } from 'recharts';
 import './DemandChart.css';
 
-function DemandChart({ predictions, selectedRegion }) {
+function DemandChart({ predictions, selectedRegion, getRegionColor, regions }) {
   const data = predictions.map((pred) => ({
-    region: `Region ${pred.region_id}`,
+    region: `${regions[pred.region_id].name}`,
     regionId: pred.region_id,
     predicted: pred.predicted_pickups,
     actual: pred.actual_pickups,
   }));
 
-  const getColor = (regionId) => {
-    return regionId === selectedRegion ? '#ff6b6b' : '#4ecdc4';
-  };
-
   return (
     <div className="chart-wrapper">
-      <ResponsiveContainer width="100%" height={400}>
+      <ResponsiveContainer
+        width={Math.max(400, predictions.length * 50)}
+        height={400}
+      >
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="#444" />
           <XAxis
@@ -34,7 +33,7 @@ function DemandChart({ predictions, selectedRegion }) {
             stroke="#fff"
             angle={-45}
             textAnchor="end"
-            height={80}
+            height={150}
           />
           <YAxis
             stroke="#fff"
@@ -52,11 +51,15 @@ function DemandChart({ predictions, selectedRegion }) {
               borderRadius: '8px',
             }}
             labelStyle={{ color: '#fff' }}
+            itemStyle={{ color: '#fff' }}
           />
           <Legend />
           <Bar dataKey="predicted" name="Predicted Demand">
             {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={getColor(entry.regionId)} />
+              <Cell
+                key={`cell-${index}`}
+                fill={getRegionColor(entry.regionId)}
+              />
             ))}
           </Bar>
           {data.some((d) => d.actual) && (

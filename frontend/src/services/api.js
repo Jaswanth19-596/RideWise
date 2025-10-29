@@ -11,10 +11,9 @@ const api = axios.create({
 });
 
 export const predictionService = {
-  getCurrentTime: () => api.get('/current-time'),
   getRegions: () => api.get('/regions'),
   predictRegion: (regionId) => api.get(`/predict/${regionId}`),
-  predictAllRegions: () => api.get('/predict-all'),
+  predictAllRegions: (regionId) => api.get(`/predict-all/${regionId}`),
 };
 
 export default api;

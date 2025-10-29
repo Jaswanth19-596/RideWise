@@ -10,8 +10,16 @@ function App() {
   const [selectedRegion, setSelectedRegion] = useState(5);
   const [predictions, setPredictions] = useState([]);
   const [currentTime, setCurrentTime] = useState('');
+  const [predictionTime, setPredictionTime] = useState('');
   const [loading, setLoading] = useState(false);
   const [regions, setRegions] = useState({});
+  const [viewType, setViewType] = useState('all'); // 'all' or 'selected'
+
+  // Utility function to generate a consistent color for each region
+  const getRegionColor = (regionId) => {
+    const hue = (regionId * 137) % 360; // Use a prime number to spread colors evenly
+    return `hsl(${hue}, 70%, 60%)`;
+  };
 
   // Fetch regions on mount
   useEffect(() => {
@@ -25,9 +33,19 @@ function App() {
   const fetchPredictions = async () => {
     setLoading(true);
     try {
-      const response = await predictionService.predictAllRegions();
-      setPredictions(response.data.predictions);
-      setCurrentTime(response.data.timestamp);
+      let response;
+      if (viewType === 'all') {
+        response = await predictionService.predictAllRegions(selectedRegion);
+        setPredictions(response.data.predictions);
+      } else {
+        response = await predictionService.predictRegion(selectedRegion);
+        setPredictions(response.data.predictions); // Wrap in array
+      }
+      console.log(predictions);
+      const now = new Date();
+      setCurrentTime(now.toLocaleString());
+      now.setMinutes(now.getMinutes() + 15);
+      setPredictionTime(now.toLocaleString());
     } catch (error) {
       console.error('Error fetching predictions:', error);
       alert(
@@ -38,11 +56,20 @@ function App() {
     }
   };
 
+  // Fetch predictions when selectedRegion changes (if viewType is 'selected') or when viewType changes
+  useEffect(() => {
+    if (viewType === 'selected' && selectedRegion) {
+      fetchPredictions();
+    } else if (viewType === 'all') {
+      fetchPredictions();
+    }
+  }, [selectedRegion, viewType]);
+
   const userPrediction = predictions.find(
     (p) => p.region_id === selectedRegion
   );
   const totalDemand = predictions.reduce(
-    (sum, p) => sum + p.predicted_pickups,
+    (sum, p) => sum + (p?.predicted_pickups || 0),
     0
   );
 
@@ -50,7 +77,7 @@ function App() {
     <div className="app">
       {/* Header */}
       <header className="header">
-        <h1>🚕 RideWise - Taxi Demand Forecaster</h1>
+        <h1>RideWise - Taxi Demand Forecaster</h1>
         <p className="subtitle">
           Real-time predictive analytics for urban mobility
         </p>
@@ -64,17 +91,26 @@ function App() {
           onSelectRegion={setSelectedRegion}
         />
 
-        <button
-          className="predict-button"
-          onClick={fetchPredictions}
-          disabled={loading}
-        >
-          {loading ? '⏳ Calculating...' : '🔮 Predict Demand'}
-        </button>
+        <div className="view-selector">
+          <button
+            className={`view-button ${viewType === 'all' ? 'active' : ''}`}
+            onClick={() => setViewType('all')}
+          >
+            All NYC
+          </button>
+          <button
+            className={`view-button ${viewType === 'selected' ? 'active' : ''}`}
+            onClick={() => setViewType('selected')}
+          >
+            Closest Regions
+          </button>
+        </div>
 
         {currentTime && (
           <div className="time-display">
-            🕐 {new Date(currentTime).toLocaleString()}
+            Current Time: {currentTime}
+            <br />
+            Prediction Time: {predictionTime}
           </div>
         )}
       </div>
@@ -85,21 +121,23 @@ function App() {
           <StatsCard
             title="Your Region"
             value={`Region ${selectedRegion}`}
-            icon="📍"
+            icon="#"
           />
           <StatsCard
             title="Your Region Demand"
-            value={`${userPrediction.predicted_pickups.toFixed(0)} pickups`}
-            icon="🚖"
-            color="#ff6b6b"
+            value={`${
+              userPrediction?.predicted_pickups?.toFixed(0) || 'N/A'
+            } pickups`}
+            icon="↑"
+            color="#007aff"
           />
           <StatsCard
             title="Total City Demand"
             value={`${totalDemand.toFixed(0)} pickups`}
-            icon="🌆"
-            color="#4ecdc4"
+            icon="∑"
+            color="#1e90ff"
           />
-          {userPrediction.actual_pickups && (
+          {userPrediction?.actual_pickups && (
             <StatsCard
               title="Prediction Accuracy"
               value={`${(
@@ -111,8 +149,8 @@ function App() {
                   userPrediction.actual_pickups) *
                   100
               ).toFixed(1)}%`}
-              icon="🎯"
-              color="#95e1d3"
+              icon="%"
+              color="#28a745"
             />
           )}
         </div>
@@ -124,37 +162,41 @@ function App() {
           <div className="main-content">
             {/* Map */}
             <div className="map-container">
-              <h2>🗺️ Demand Heatmap</h2>
+              <h2>
+                <span className="icon">📍</span> Demand Heatmap
+              </h2>
               <Map
                 predictions={predictions}
                 regions={regions}
                 selectedRegion={selectedRegion}
                 onSelectRegion={setSelectedRegion}
+                getRegionColor={getRegionColor}
               />
             </div>
 
             {/* Chart */}
             <div className="chart-container">
-              <h2>📊 Demand by Region</h2>
+              <h2>Demand by Region</h2>
               <DemandChart
                 predictions={predictions}
                 selectedRegion={selectedRegion}
+                getRegionColor={getRegionColor}
+                regions={regions}
               />
             </div>
           </div>
 
           {/* Details Table */}
           <div className="table-container">
-            <h2>📋 Detailed Predictions</h2>
+            <h2>Detailed Predictions</h2>
             <div className="table-wrapper">
               <table className="predictions-table">
                 <thead>
                   <tr>
                     <th>Region</th>
                     <th>Location</th>
-                    <th>Predicted</th>
-                    <th>Actual</th>
-                    <th>Error</th>
+                    <th>Pickups</th>
+                    <th>Distance</th>
                     <th>Status</th>
                   </tr>
                 </thead>
@@ -170,32 +212,23 @@ function App() {
                       <td>{pred.region_id}</td>
                       <td>{regions[pred.region_id]?.name}</td>
                       <td className="demand-high">
-                        {pred.predicted_pickups.toFixed(1)}
+                        {pred.predicted_pickups?.toFixed(1) || 'N/A'}
                       </td>
-                      <td>{pred.actual_pickups?.toFixed(1) || 'N/A'}</td>
-                      <td>
-                        {pred.actual_pickups
-                          ? Math.abs(
-                              pred.predicted_pickups - pred.actual_pickups
-                            ).toFixed(1)
-                          : 'N/A'}
-                      </td>
+                      <td>{pred.distance || 'N/A'}</td>
                       <td>
                         <span
                           className={`badge ${
-                            pred.features.is_rush_hour ? 'rush' : ''
+                            pred.features?.is_rush_hour ? 'rush' : ''
                           }`}
                         >
-                          {pred.features.is_rush_hour ? '🚨 Rush' : '✅ Normal'}
+                          {pred.features?.is_rush_hour ? 'Rush' : 'Normal'}
                         </span>
                         <span
                           className={`badge ${
-                            pred.features.is_weekend ? 'weekend' : ''
+                            pred.features?.is_weekend ? 'weekend' : ''
                           }`}
                         >
-                          {pred.features.is_weekend
-                            ? '🎉 Weekend'
-                            : '💼 Weekday'}
+                          {pred.features?.is_weekend ? 'Weekend' : 'Weekday'}
                         </span>
                       </td>
                     </tr>
@@ -207,8 +240,11 @@ function App() {
         </>
       ) : (
         <div className="empty-state">
-          <h2>👆 Click "Predict Demand" to get started!</h2>
-          <p>Select your region and see real-time taxi demand predictions</p>
+          <h2>Select a region to view predictions</h2>
+          <p>
+            Choose a region from the dropdown to see real-time taxi demand
+            forecasts.
+          </p>
         </div>
       )}
     </div>

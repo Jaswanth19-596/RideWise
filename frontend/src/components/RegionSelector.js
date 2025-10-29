@@ -4,7 +4,7 @@ import './RegionSelector.css';
 function RegionSelector({ regions, selectedRegion, onSelectRegion }) {
   return (
     <div className="region-selector">
-      <label>📍 Select Your Region:</label>
+      <label>Select Your Region:</label>
       <select
         value={selectedRegion}
         onChange={(e) => onSelectRegion(Number(e.target.value))}
