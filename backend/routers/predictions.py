@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel
 from typing import List, Dict, Tuple, Optional
-from models.predictor import predictor
+from classes.predictor import predictor
 import joblib
 from routers.regions import REGION_COORDINATES
 from utils.haversine import haversine_distance
@@ -13,7 +13,7 @@ from datetime import datetime
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 MODELS_PATH = PROJECT_ROOT / 'models'
 MAX_REGIONS = 30
 
@@ -47,6 +47,7 @@ def load_models() -> Tuple:
 
 
 def get_neighboring_regions(region_id: int, n_neighbors: int) -> Tuple[List[int], List[float]]:
+    print("coming into neighboring regions")
     if region_id not in REGION_COORDINATES:
         raise HTTPException(status_code=404, detail=f"Region {region_id} not found")
     
@@ -72,7 +73,7 @@ def get_neighboring_regions(region_id: int, n_neighbors: int) -> Tuple[List[int]
 @router.get("/predict/{region_id}", response_model=AllRegionsResponse)
 async def predict_region(region_id: int):
     try:
-        neighbor_regions, distances = get_neighboring_regions(region_id, 9)
+        neighbor_regions, distances = get_neighboring_regions(region_id, 2)
         predictions = []
         
         for idx, region in enumerate(neighbor_regions):
@@ -102,7 +103,7 @@ async def predict_region(region_id: int):
 @router.get("/predict-all/{region_id}", response_model=AllRegionsResponse)
 async def predict_all_regions(region_id: int):
     try:
-        neighbor_regions, distances = get_neighboring_regions(region_id, MAX_REGIONS)
+        neighbor_regions, distances = get_neighboring_regions(region_id, 2)
         predictions = []
         
         for idx, region in enumerate(neighbor_regions):
@@ -115,6 +116,7 @@ async def predict_all_regions(region_id: int):
                     distance=distances[idx],
                 ))
             except Exception as e:
+                logger.warning(e)
                 logger.warning(f"Failed prediction for region {region}: {e}")
         
         if not predictions:
