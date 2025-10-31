@@ -1,10 +1,10 @@
 from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel
 from typing import List, Dict, Tuple, Optional
-from backend.models.predictor import predictor
+from models.predictor import predictor
 import joblib
-from backend.routers.regions import REGION_COORDINATES
-from backend.utils.haversine import haversine_distance
+from routers.regions import REGION_COORDINATES
+from utils.haversine import haversine_distance
 from pathlib import Path
 import logging
 from functools import lru_cache

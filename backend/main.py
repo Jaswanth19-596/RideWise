@@ -7,8 +7,8 @@ import sys
 # Add parent directory to path to import from ridewise package
 sys.path.append(str(Path(__file__).parent.parent))
 
-from backend.routers import predictions, regions
-from backend.config import settings
+from routers import predictions, regions
+from config import settings
 
 app = FastAPI(
     title="RideWise API",

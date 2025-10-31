@@ -32,6 +32,7 @@ stages:
       - ridewise/model_training.py
       - data/processed/test.csv
       - data/processed/train.csv
+      - data/processed/train_stats.csv
     params:
       - model_training
     outs:

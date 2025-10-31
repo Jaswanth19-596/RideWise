@@ -4,7 +4,7 @@ import joblib
 from datetime import datetime
 from datetime import timedelta
 from pathlib import Path
-from backend.config import settings
+from config import settings
 
 
 

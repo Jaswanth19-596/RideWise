@@ -85,6 +85,12 @@ metrics = {
     'Test MAE': test_mae
 }
 
+# Save the scaler and the kmeans model
+MODEL_PATH = os.path.join(PROJECT_ROOT, 'models')
+os.makedirs(MODEL_PATH, exist_ok=True)
+joblib.dump(model, 'models/model.joblib')
+joblib.dump(encoder, 'models/encoder.joblib')
+
 
 with mlflow.start_run() as run:
     # Log the parameters
@@ -97,6 +103,12 @@ with mlflow.start_run() as run:
     # Log the metrics
     mlflow.log_metrics(metrics)
 
+    # Logging all the models as the artifacts -> Used in the backend
+    mlflow.log_artifact(os.path.join(PROJECT_ROOT, 'models'))
+
+    # Log the test data and train_stats data
+    mlflow.log_artifact(os.path.join(PROJECT_ROOT, 'data', 'processed', 'train_stats.csv'), artifact_path='data')
+    mlflow.log_artifact(os.path.join(PROJECT_ROOT, 'data', 'processed', 'test.csv'), artifact_path='data')
 
 # Registering the model
 model_uri = f'runs:/{run.info.run_id}/model'
@@ -119,8 +131,4 @@ client.set_registered_model_alias(
     version = model_version.version
 )
 
-# Save the scaler and the kmeans model
-MODEL_PATH = os.path.join(PROJECT_ROOT, 'models')
-os.makedirs(MODEL_PATH, exist_ok=True)
-joblib.dump(model, 'models/model.joblib')
-joblib.dump(encoder, 'models/encoder.joblib')
+

@@ -76,8 +76,8 @@ stages:
       size: 46678291
     - path: ridewise/model_training.py
       hash: md5
-      md5: e536770fb55d1a96d85f3d2b4c695ac0
-      size: 3468
+      md5: 0caa34f55c73ff6486002bcd3ff282df
+      size: 3868
     params:
       params.yaml:
         model_training:
