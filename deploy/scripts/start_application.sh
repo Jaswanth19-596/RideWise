@@ -3,6 +3,9 @@
 # log everything to start_application.log
 exec > /home/ubuntu/start_application.log 2>&1
 
+# 1. Create a user-defined bridge network
+docker network create --driver bridge ridewise-net || true
+
 # Login to ECR
 aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 740186513331.dkr.ecr.us-east-2.amazonaws.com
 
@@ -24,11 +27,13 @@ echo "REACT_APP_API_URL=$(aws ssm get-parameter --name REACT_APP_API_URL --query
 
 # Run Docker containers using the env file
 docker run -d --name backend \
+    --network ridewise-net \
     --env-file "$ENV_FILE" \
     -p 8000:8000 \
     740186513331.dkr.ecr.us-east-2.amazonaws.com/ridewise/production:backend-latest
 
 docker run -d --name frontend \
+    --network ridewise-net \
     --env-file "$ENV_FILE" \
     -p 80:80 \
     740186513331.dkr.ecr.us-east-2.amazonaws.com/ridewise/production:frontend-latest

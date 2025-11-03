@@ -98,6 +98,6 @@ jobs:
           aws deploy create-deployment \
             --application-name RideWise-CodeDeploy-Application \
             --deployment-group-name RideWise-CodeDeploy-Group \
-            --s3-location bucket=ridewisebucket,key=deploy.zip,bundleType=zip \
+            --s3-location bucket=ridewisebucket,key=deployment.zip,bundleType=zip \
             --file-exists-behavior OVERWRITE \
             --description "Deployment From Github Actions"
