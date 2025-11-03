@@ -1,7 +1,6 @@
 from pydantic_settings import BaseSettings
 from pathlib import Path
 from dotenv import load_dotenv
-import os
 
 load_dotenv()
 
@@ -31,5 +30,6 @@ class Settings(BaseSettings):
     
     class Config:
         env_file = ".env"
+        extra = "ignore"
 
 settings = Settings()
