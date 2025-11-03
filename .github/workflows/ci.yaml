@@ -85,7 +85,7 @@ jobs:
 
       - name: Create deployment package
         run: |
-          zip -r deployment.zip appspec.yaml deploy/scripts/install_dependencies.sh deploy/scripts/start_application.sh
+          zip -r deployment.zip appspec.yml deploy/scripts/install_dependencies.sh deploy/scripts/start_application.sh
 
       - name: Upload to S3
         run: |
