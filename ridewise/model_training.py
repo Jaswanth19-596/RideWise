@@ -63,12 +63,12 @@ X_test_encoded = encoder.transform(X_test)
 
 xg_boost_params = params['model_training']['xg_boost']
 
-model = XGBRegressor(**params)
+xgmodel = XGBRegressor(**params)
 
-model.fit(X_train_encoded, y_train)
+xgmodel.fit(X_train_encoded, y_train)
 
-y_train_pred = model.predict(X_train_encoded)
-y_test_pred = model.predict(X_test_encoded)
+y_train_pred = xgmodel.predict(X_train_encoded)
+y_test_pred = xgmodel.predict(X_test_encoded)
 
 # Mean absolute percentage error
 train_mape = mean_absolute_percentage_error(y_train, y_train_pred)
@@ -88,7 +88,7 @@ metrics = {
 # Save the scaler and the kmeans model
 MODEL_PATH = os.path.join(PROJECT_ROOT, 'models')
 os.makedirs(MODEL_PATH, exist_ok=True)
-joblib.dump(model, 'models/model.joblib')
+joblib.dump(xgmodel, 'models/xgmodel.joblib')
 joblib.dump(encoder, 'models/encoder.joblib')
 
 
@@ -98,20 +98,22 @@ with mlflow.start_run() as run:
 
     # Log the model
     signature = infer_signature(X_train_encoded, y_train_pred)
-    mlflow.xgboost.log_model(model, signature = signature, name = 'model')
+    mlflow.xgboost.log_model(xgmodel, signature = signature, name = 'xgmodel')
 
     # Log the metrics
     mlflow.log_metrics(metrics)
 
     # Logging all the models as the artifacts -> Used in the backend
-    mlflow.log_artifact(os.path.join(PROJECT_ROOT, 'models'))
+    mlflow.log_artifact(os.path.join(PROJECT_ROOT, 'models', 'scaler.joblib'), 'models')
+    mlflow.log_artifact(os.path.join(PROJECT_ROOT, 'models', 'kmeans.joblib'), 'models')
+    mlflow.log_artifact(os.path.join(PROJECT_ROOT, 'models', 'encoder.joblib'), 'models')
 
     # Log the test data and train_stats data
     mlflow.log_artifact(os.path.join(PROJECT_ROOT, 'data', 'processed', 'train_stats.csv'), artifact_path='data')
     mlflow.log_artifact(os.path.join(PROJECT_ROOT, 'data', 'processed', 'test.csv'), artifact_path='data')
 
 # Registering the model
-model_uri = f'runs:/{run.info.run_id}/model'
+model_uri = f'runs:/{run.info.run_id}/xgmodel'
 model_name = "ridewise.development.xgboost"
 model_version = mlflow.register_model(model_uri, model_name)
 

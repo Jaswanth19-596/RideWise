@@ -36,5 +36,5 @@ stages:
     params:
       - model_training
     outs:
-      - models/model.joblib
+      - models/xgmodel.joblib
       - models/encoder.joblib

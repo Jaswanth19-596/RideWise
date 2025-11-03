@@ -48,3 +48,27 @@ jobs:
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
         run: |
           python ridewise/promote_model.py
+
+  push_to_ecr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install Amazon CLI
+        run: |
+          sudo apt install awscli
+
+      - name: Retrieve an authentication token
+        run: |
+          aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 740186513331.dkr.ecr.us-east-2.amazonaws.com
+
+      - name: Build and tag the Docker image
+        run: |
+          docker build -t ridewise/production/backend ./backend/
+          docker build -t ridewise/production/frontend ./frontend/
+          docker tag ridewise/production/backend:latest 740186513331.dkr.ecr.us-east-2.amazonaws.com/ridewise/production/backend:latest
+          docker tag ridewise/production/frontend:latest 740186513331.dkr.ecr.us-east-2.amazonaws.com/ridewise/production/frontend:latest
+
+      - name: Push the Image
+        run: |
+          docker push 740186513331.dkr.ecr.us-east-2.amazonaws.com/ridewise/production/backend:latest
+          docker push 740186513331.dkr.ecr.us-east-2.amazonaws.com/ridewise/production/frontend:latest

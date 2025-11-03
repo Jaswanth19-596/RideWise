@@ -13,8 +13,14 @@ mlflow.set_experiment("/Users/madhajaswanth@gmail.com/RideWise")
 
 client = MlflowClient()
 
-client.copy_model_version(
+result = client.copy_model_version(
     src_model_uri='models:/ridewise.development.xgboost@latest',
     dst_name = 'ridewise.production.xgboost'
+)
+
+client.set_registered_model_alias(
+    name = 'ridewise.production.xgboost',
+    alias='champion',
+    version=result.version
 )
 
