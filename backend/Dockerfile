@@ -1,5 +1,4 @@
 # STAGE 1 : Builder - Install Dependencies
-
 FROM python:3.11-slim as builder
 
 # Set the working directory for the application code
@@ -14,7 +13,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 
 # Stage 2 : Production - Create the final image
-
 FROM python:3.11-slim
 
 WORKDIR /app
