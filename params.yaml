@@ -16,8 +16,8 @@ data_preprocessing:
   epsilon_val: 10
 
 feature_engineering:
-  train_data_percentage: 0.7
-  test_data_percentage: 0.3
+  train_data_percentage: 0.6
+  test_data_percentage: 0.4
 
 model_training:
   xg_boost:
