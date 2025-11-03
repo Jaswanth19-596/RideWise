@@ -82,3 +82,22 @@ jobs:
         run: |
           docker push 740186513331.dkr.ecr.us-east-2.amazonaws.com/ridewise/production:backend-latest
           docker push 740186513331.dkr.ecr.us-east-2.amazonaws.com/ridewise/production:frontend-latest
+
+      - name: Create deployment package
+        run: |
+          zip -r deployment.zip appspec.yaml deploy/scripts/install_dependencies.sh deploy/scripts/start_application.sh
+
+      - name: Upload to S3
+        run: |
+          aws s3 cp deployment.zip s3://ridewisebucket/deployment.zip
+
+      - name: Trigger CodeDeploy
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws deploy create-deployment \
+            --application-name RideWise-CodeDeploy-Application \
+            --deployment-group-name RideWise-CodeDeploy-Group \
+            --s3-location bucket=ridewisebucket,key=deploy.zip,bundleType=zip \
+            --file-exists-behavior OVERWRITE \
+            --description "Deployment From Github Actions"
