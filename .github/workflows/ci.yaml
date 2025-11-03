@@ -75,10 +75,10 @@ jobs:
         run: |
           docker build -t ridewise/production/backend ./backend/
           docker build -t ridewise/production/frontend ./frontend/
-          docker tag ridewise/production/backend:latest 740186513331.dkr.ecr.us-east-2.amazonaws.com/ridewise/production/backend:latest
-          docker tag ridewise/production/frontend:latest 740186513331.dkr.ecr.us-east-2.amazonaws.com/ridewise/production/frontend:latest
+          docker tag ridewise/production/backend:latest 740186513331.dkr.ecr.us-east-2.amazonaws.com/ridewise/production:backend-latest
+          docker tag ridewise/production/frontend:latest 740186513331.dkr.ecr.us-east-2.amazonaws.com/ridewise/production:frontend-latest
 
       - name: Push the Image
         run: |
-          docker push 740186513331.dkr.ecr.us-east-2.amazonaws.com/ridewise/production/backend:latest
-          docker push 740186513331.dkr.ecr.us-east-2.amazonaws.com/ridewise/production/frontend:latest
+          docker push 740186513331.dkr.ecr.us-east-2.amazonaws.com/ridewise/production:backend-latest
+          docker push 740186513331.dkr.ecr.us-east-2.amazonaws.com/ridewise/production:frontend-latest
