@@ -38,5 +38,4 @@ docker run -d --name frontend \
     -p 80:80 \
     740186513331.dkr.ecr.us-east-2.amazonaws.com/ridewise/production:frontend-latest
 
-# CRITICAL: Clean up the temporary 
 rm "$ENV_FILE"
