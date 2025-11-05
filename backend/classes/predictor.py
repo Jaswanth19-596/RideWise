@@ -17,8 +17,7 @@ class TaxiDemandPredictor:
         model_uri = f'models:/{settings.MODEL_NAME}@{settings.MODEL_ALIAS}'
 
         # Loading the model
-        # self.model = mlflow.xgboost.load_model(model_uri)
-        self.model = joblib.load(settings.MODELS_DIR / 'xgmodel.joblib')
+        self.model = mlflow.xgboost.load_model(model_uri)
 
         client = MlflowClient()
         model_version = client.get_model_version_by_alias(
@@ -27,9 +26,9 @@ class TaxiDemandPredictor:
         )
 
         run_id = model_version.run_id
-        # local_path = client.download_artifacts(run_id, '', '.')
+        local_path = client.download_artifacts(run_id, '', '.')
 
-        # print(f"Artifacts download in {local_path}")
+        print(f"Artifacts download in {local_path}")
 
         self.train_stats = settings.TRAIN_STATS_PATH
         self.test_data = pd.read_csv(
