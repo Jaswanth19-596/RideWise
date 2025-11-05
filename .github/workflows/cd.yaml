@@ -10,6 +10,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Checkout Repository Code
         uses: actions/checkout@v4
@@ -28,17 +29,17 @@ jobs:
       - name: Build and Tag Docker Images
         run: |
           # Build Backend
-          docker build -t ridewise/production/backend:latest ./backend/
-          docker tag ridewise/production/backend:latest 740186513331.dkr.ecr.us-east-2.amazonaws.com/ridewise/production:backend-latest
+          docker build -t ridewise/backend:latest ./backend/
+          docker tag ridewise/backend:latest 740186513331.dkr.ecr.us-east-2.amazonaws.com/ridewise/backend:latest
 
           # Build Frontend
-          docker build --no-cache -t ridewise/production/frontend:latest ./frontend/
-          docker tag ridewise/production/frontend:latest 740186513331.dkr.ecr.us-east-2.amazonaws.com/ridewise/production:frontend-latest
+          docker build -t ridewise/frontend:latest ./frontend/
+          docker tag ridewise/frontend:latest 740186513331.dkr.ecr.us-east-2.amazonaws.com/ridewise/frontend:latest
 
       - name: Push Docker Images to ECR
         run: |
-          docker push 740186513331.dkr.ecr.us-east-2.amazonaws.com/ridewise/production:backend-latest
-          docker push 740186513331.dkr.ecr.us-east-2.amazonaws.com/ridewise/production:frontend-latest
+          docker push 740186513331.dkr.ecr.us-east-2.amazonaws.com/ridewise/backend:latest
+          docker push 740186513331.dkr.ecr.us-east-2.amazonaws.com/ridewise/frontend:latest
 
       - name: Create Deployment Package
         run: |
