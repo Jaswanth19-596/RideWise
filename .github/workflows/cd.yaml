@@ -32,7 +32,7 @@ jobs:
           docker tag ridewise/production/backend:latest 740186513331.dkr.ecr.us-east-2.amazonaws.com/ridewise/production:backend-latest
 
           # Build Frontend
-          docker build -t ridewise/production/frontend:latest ./frontend/
+          docker build --no-cache -t ridewise/production/frontend:latest ./frontend/
           docker tag ridewise/production/frontend:latest 740186513331.dkr.ecr.us-east-2.amazonaws.com/ridewise/production:frontend-latest
 
       - name: Push Docker Images to ECR
