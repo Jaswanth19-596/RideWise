@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     # API settings
     API_HOST: str = "0.0.0.0"
     API_PORT: int = 8000
-    ALLOWED_ORIGINS: list = ["http://localhost:3000", "http://localhost:5173"]
+    ALLOWED_ORIGINS: list = ["*"]
     
     # Model files
     KMEANS_PATH: Path = MODELS_DIR / "kmeans.joblib"

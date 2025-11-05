@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import List, Dict, Tuple, Optional
 from classes.predictor import predictor
@@ -47,7 +47,6 @@ def load_models() -> Tuple:
 
 
 def get_neighboring_regions(region_id: int, n_neighbors: int) -> Tuple[List[int], List[float]]:
-    print("coming into neighboring regions")
     if region_id not in REGION_COORDINATES:
         raise HTTPException(status_code=404, detail=f"Region {region_id} not found")
     
