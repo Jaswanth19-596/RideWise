@@ -73,7 +73,7 @@ def get_neighboring_regions(region_id: int, n_neighbors: int) -> Tuple[List[int]
 @router.get("/predict/{region_id}", response_model=AllRegionsResponse)
 async def predict_region(region_id: int):
     try:
-        neighbor_regions, distances = get_neighboring_regions(region_id, 2)
+        neighbor_regions, distances = get_neighboring_regions(region_id, 8)
         predictions = []
         
         for idx, region in enumerate(neighbor_regions):
