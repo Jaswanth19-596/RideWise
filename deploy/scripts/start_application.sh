@@ -32,10 +32,14 @@ docker run -d --name backend \
     -p 8000:8000 \
     740186513331.dkr.ecr.us-east-2.amazonaws.com/ridewise/production:backend-latest
 
-docker run -d --name frontend \
-    --network ridewise-net \
-    --env-file "$ENV_FILE" \
-    -p 80:80 \
-    740186513331.dkr.ecr.us-east-2.amazonaws.com/ridewise/production:frontend-latest
+docker run -d \
+  --name ridewise-frontend \
+  --network ridewise-network \
+  -p 80:80 \
+  -p 443:443 \
+  -v /etc/letsencrypt:/etc/letsencrypt:ro \
+  -v /var/lib/letsencrypt:/var/lib/letsencrypt:ro \
+  --restart unless-stopped \
+  740186513331.dkr.ecr.us-east-2.amazonaws.com/ridewise/production:frontend-latest
 
 rm "$ENV_FILE"
