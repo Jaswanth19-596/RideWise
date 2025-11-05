@@ -47,7 +47,6 @@ def test_performance():
     y_pred = model.predict(X_encoded)
 
     percentage_error = mean_absolute_percentage_error(y_true, y_pred)
-    print(percentage_error)
     assert percentage_error < 0.3
 
 

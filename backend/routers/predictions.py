@@ -50,21 +50,43 @@ def get_neighboring_regions(region_id: int, n_neighbors: int) -> Tuple[List[int]
     if region_id not in REGION_COORDINATES:
         raise HTTPException(status_code=404, detail=f"Region {region_id} not found")
     
+ 
+
+
     region = REGION_COORDINATES[region_id]
     lat, lon = region['lat'], region['lon']
     
-    kmeans, scaler, centers = load_models()
-    
+   
+
+
+    kmeans, scaler, center_coordinates = load_models()
+
+    print(REGION_COORDINATES)
+    print(center_coordinates)
+
     distances = []
-    for idx, center in enumerate(centers):
-        dist = haversine_distance(center[1], center[0], lat, lon)
+    for idx, (neighbor_long, neighbor_lat) in enumerate(center_coordinates):
+        dist = haversine_distance(neighbor_lat, neighbor_long, lat, lon)
         distances.append((idx, dist))
     
+    print("distances")
+    print(distances)
+
+
     sorted_distances = sorted(distances, key=lambda x: x[1])[:n_neighbors]
+    print("sorted distances")
+    print(sorted_distances)
+
+    neighbor_centers = [center_coordinates[idx] for idx, _ in sorted_distances]
+    print("Neighbor Centers")
+    print(neighbor_centers)
     
-    neighbor_centers = [centers[idx] for idx, _ in sorted_distances]
-    neighbor_distances = [round(dist, 2) for _, dist in sorted_distances]
+    neighbor_distances = [dist for _, dist in sorted_distances]
+    print("Neighbor distances")
+    print(neighbor_distances)
     neighbor_regions = kmeans.predict(scaler.transform(neighbor_centers))
+    print("Neighbor regions")
+    print(neighbor_regions)
 
     return neighbor_regions.tolist(), neighbor_distances
 
@@ -72,7 +94,7 @@ def get_neighboring_regions(region_id: int, n_neighbors: int) -> Tuple[List[int]
 @router.get("/predict/{region_id}", response_model=AllRegionsResponse)
 async def predict_region(region_id: int):
     try:
-        neighbor_regions, distances = get_neighboring_regions(region_id, 8)
+        neighbor_regions, distances = get_neighboring_regions(region_id, 9)
         predictions = []
         
         for idx, region in enumerate(neighbor_regions):

@@ -41,7 +41,6 @@ function App() {
         response = await predictionService.predictRegion(selectedRegion);
         setPredictions(response.data.predictions); // Wrap in array
       }
-      console.log(predictions);
       const now = new Date();
       setCurrentTime(now.toLocaleString());
       now.setMinutes(now.getMinutes() + 15);

@@ -9,7 +9,7 @@ with open('params.yaml') as stream:
     try:
         params = yaml.safe_load(stream)
     except yaml.YAMLError as exc:
-        print(exc)
+        print(f'Exception while loading params.yml', exc)
 
 
 # Defining bounding box of newyork
