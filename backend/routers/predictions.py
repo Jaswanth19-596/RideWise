@@ -55,32 +55,17 @@ def get_neighboring_regions(region_id: int, n_neighbors: int) -> Tuple[List[int]
     
     kmeans, scaler, center_coordinates = load_models()
 
-    print(REGION_COORDINATES)
-    print(center_coordinates)
-
     distances = []
     for idx, (neighbor_long, neighbor_lat) in enumerate(center_coordinates):
         dist = haversine_distance(neighbor_lat, neighbor_long, lat, lon)
         distances.append((idx, dist))
     
-    print("distances")
-    print(distances)
-
-
     sorted_distances = sorted(distances, key=lambda x: x[1])[:n_neighbors]
-    print("sorted distances")
-    print(sorted_distances)
 
     neighbor_centers = [center_coordinates[idx] for idx, _ in sorted_distances]
-    print("Neighbor Centers")
-    print(neighbor_centers)
     
     neighbor_distances = [dist for _, dist in sorted_distances]
-    print("Neighbor distances")
-    print(neighbor_distances)
     neighbor_regions = kmeans.predict(scaler.transform(neighbor_centers))
-    print("Neighbor regions")
-    print(neighbor_regions)
 
     return neighbor_regions.tolist(), neighbor_distances
 
@@ -115,20 +100,18 @@ async def predict_region(region_id: int):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/predict-all/{region_id}", response_model=AllRegionsResponse)
-async def predict_all_regions(region_id: int):
+@router.get("/predict-all", response_model=AllRegionsResponse)
+async def predict_all_regions():
     try:
-        neighbor_regions, distances = get_neighboring_regions(region_id, MAX_REGIONS)
         predictions = []
-        
-        for idx, region in enumerate(neighbor_regions):
+        # For every region, find the demand at that point of time
+        for idx, region in enumerate(range(0, 30)):
             try:
                 result = predictor.predict(int(region))
                 predictions.append(PredictionResponse(
                     region_id=int(region),
                     predicted_pickups=result["prediction"],
                     features=result["features"],
-                    distance=distances[idx],
                 ))
             except Exception as e:
                 logger.warning(e)
