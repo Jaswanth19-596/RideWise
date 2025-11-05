@@ -14,7 +14,7 @@ aws ecr get-login-password --region us-east-2 | docker login --username AWS --pa
 # Stop old containers
 docker stop ridewise-frontend ridewise-backend 2>/dev/null || true
 docker rm ridewise-frontend ridewise-backend 2>/dev/null || true
-
+    
 docker pull 740186513331.dkr.ecr.us-east-2.amazonaws.com/ridewise/backend:latest
 docker pull 740186513331.dkr.ecr.us-east-2.amazonaws.com/ridewise/frontend:latest
 
