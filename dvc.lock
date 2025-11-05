@@ -52,32 +52,32 @@ stages:
     params:
       params.yaml:
         feature_engineering:
-          train_data_percentage: 0.9
-          test_data_percentage: 0.1
+          train_data_percentage: 0.6
+          test_data_percentage: 0.4
     outs:
     - path: data/processed/test.csv
       hash: md5
-      md5: 24be537d2238326080be289a531f1372
-      size: 6705102
+      md5: d5c806e6b6c4b8c5277bde6e34b12687
+      size: 26992682
     - path: data/processed/train.csv
       hash: md5
-      md5: f524298206f2e24f1ac68c396b958b1e
-      size: 61142150
+      md5: 6e8e08b04678ab7fa2d111430d4516fc
+      size: 40378799
   model_training:
     cmd: python ridewise/model_training.py
     deps:
     - path: data/processed/test.csv
       hash: md5
-      md5: 24be537d2238326080be289a531f1372
-      size: 6705102
+      md5: d5c806e6b6c4b8c5277bde6e34b12687
+      size: 26992682
     - path: data/processed/train.csv
       hash: md5
-      md5: f524298206f2e24f1ac68c396b958b1e
-      size: 61142150
+      md5: 6e8e08b04678ab7fa2d111430d4516fc
+      size: 40378799
     - path: data/processed/train_stats.csv
       hash: md5
-      md5: 2efc11ad7ee7127740eeb36251af9d57
-      size: 426802
+      md5: f87f4bb29355f0db69d113ac184455c5
+      size: 417640
     - path: ridewise/model_training.py
       hash: md5
       md5: f11a6ff54425ac3c9351a16991d14c1e
@@ -108,8 +108,8 @@ stages:
       size: 3748
     - path: models/xgmodel.joblib
       hash: md5
-      md5: 43596e77774fa8aae2b436dabb87495d
-      size: 470767
+      md5: 587a85fae146514c789dc95530be444b
+      size: 459336
   data_preprocessing:
     cmd: python ridewise/data_preprocessing.py
     deps:
