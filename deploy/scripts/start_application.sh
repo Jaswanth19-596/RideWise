@@ -10,8 +10,8 @@ docker network create --driver bridge ridewise-net || true
 aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 740186513331.dkr.ecr.us-east-2.amazonaws.com
 
 # Stop old containers
-docker stop backend frontend 2>/dev/null || true
-docker rm backend frontend 2>/dev/null || true
+docker stop ridewise-frontend ridewise-backend 2>/dev/null || true
+docker rm ridewise-frontend ridewise-backend 2>/dev/null || true
 
 docker pull 740186513331.dkr.ecr.us-east-2.amazonaws.com/ridewise/production:backend-latest
 docker pull 740186513331.dkr.ecr.us-east-2.amazonaws.com/ridewise/production:frontend-latest
@@ -26,7 +26,7 @@ echo "DATABRICKS_TOKEN=$(aws ssm get-parameter --name DATABRICKS_TOKEN --query '
 echo "REACT_APP_API_URL=$(aws ssm get-parameter --name REACT_APP_API_URL --query 'Parameter.Value' --output text --region us-east-2)" >> "$ENV_FILE"
 
 # Run Docker containers using the env file
-docker run -d --name backend \
+docker run -d --name ridewise-backend \
     --network ridewise-net \
     --env-file "$ENV_FILE" \
     -p 8000:8000 \
@@ -34,7 +34,7 @@ docker run -d --name backend \
 
 docker run -d \
   --name ridewise-frontend \
-  --network ridewise-network \
+  --network ridewise-net \
   -p 80:80 \
   -p 443:443 \
   -v /etc/letsencrypt:/etc/letsencrypt:ro \
