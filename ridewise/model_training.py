@@ -107,6 +107,7 @@ with mlflow.start_run() as run:
     mlflow.log_artifact(os.path.join(PROJECT_ROOT, 'models', 'scaler.joblib'), 'models')
     mlflow.log_artifact(os.path.join(PROJECT_ROOT, 'models', 'kmeans.joblib'), 'models')
     mlflow.log_artifact(os.path.join(PROJECT_ROOT, 'models', 'encoder.joblib'), 'models')
+    mlflow.log_artifact(os.path.join(PROJECT_ROOT, 'models', 'centroids.npy'), 'models')
 
     # Log the test data and train_stats data
     mlflow.log_artifact(os.path.join(PROJECT_ROOT, 'data', 'processed', 'train_stats.csv'), artifact_path='data')

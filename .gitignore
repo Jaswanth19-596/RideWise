@@ -2,7 +2,7 @@
 data/
 
 # Models
-/models
+models/
 *.csv
 
 # Mac OS-specific storage files

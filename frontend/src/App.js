@@ -214,7 +214,7 @@ function App() {
                       <td className="demand-high">
                         {pred.predicted_pickups?.toFixed(1) || 'N/A'}
                       </td>
-                      {viewType == 'neighbors' && (
+                      {viewType === 'neighbors' && (
                         <td>{pred.distance || 'N/A'}</td>
                       )}
                     </tr>
