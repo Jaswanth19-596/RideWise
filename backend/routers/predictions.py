@@ -50,15 +50,9 @@ def get_neighboring_regions(region_id: int, n_neighbors: int) -> Tuple[List[int]
     if region_id not in REGION_COORDINATES:
         raise HTTPException(status_code=404, detail=f"Region {region_id} not found")
     
- 
-
-
     region = REGION_COORDINATES[region_id]
     lat, lon = region['lat'], region['lon']
     
-   
-
-
     kmeans, scaler, center_coordinates = load_models()
 
     print(REGION_COORDINATES)
