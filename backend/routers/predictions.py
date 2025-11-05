@@ -3,12 +3,13 @@ from pydantic import BaseModel
 from typing import List, Dict, Tuple, Optional
 from classes.predictor import predictor
 import joblib
-from routers.regions import REGION_COORDINATES
+from routers.regions import REGION_COORDINATES_NAMES, REGION_COORDINATES
 from utils.haversine import haversine_distance
 from pathlib import Path
 import logging
 from functools import lru_cache
 from datetime import datetime
+import numpy as np
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -32,14 +33,13 @@ class AllRegionsResponse(BaseModel):
     timestamp: Optional[str] = None
 
 
-@lru_cache(maxsize=1)
+# @lru_cache(maxsize=1)
 def load_models() -> Tuple:
     try:
         kmeans = joblib.load(MODELS_PATH / 'kmeans.joblib')
         scaler = joblib.load(MODELS_PATH / 'scaler.joblib')
-        centers = scaler.inverse_transform(kmeans.cluster_centers_)
-        logger.info(f"Models loaded: {len(centers)} centers")
-        return kmeans, scaler, centers
+    
+        return kmeans, scaler
     except FileNotFoundError:
         raise HTTPException(status_code=503, detail="Model files not found")
     except Exception as e:
@@ -47,48 +47,32 @@ def load_models() -> Tuple:
 
 
 def get_neighboring_regions(region_id: int, n_neighbors: int) -> Tuple[List[int], List[float]]:
-    if region_id not in REGION_COORDINATES:
+    if region_id not in REGION_COORDINATES_NAMES:
         raise HTTPException(status_code=404, detail=f"Region {region_id} not found")
     
-    region = REGION_COORDINATES[region_id]
+    region = REGION_COORDINATES_NAMES[region_id]
     lat, lon = region['lat'], region['lon']
     
-    kmeans, scaler, center_coordinates = load_models()
-
-    print(REGION_COORDINATES)
-    print(center_coordinates)
+    _, scaler = load_models()
+    center_coordinates = scaler.transform(REGION_COORDINATES)
 
     distances = []
-    for idx, (neighbor_long, neighbor_lat) in enumerate(center_coordinates):
+    for idx, (neighbor_lat, neighbor_long) in enumerate(scaler.inverse_transform(center_coordinates)):
         dist = haversine_distance(neighbor_lat, neighbor_long, lat, lon)
         distances.append((idx, dist))
     
-    print("distances")
-    print(distances)
-
-
     sorted_distances = sorted(distances, key=lambda x: x[1])[:n_neighbors]
-    print("sorted distances")
-    print(sorted_distances)
 
-    neighbor_centers = [center_coordinates[idx] for idx, _ in sorted_distances]
-    print("Neighbor Centers")
-    print(neighbor_centers)
-    
+    neighbors = [idx for idx, _ in sorted_distances]
     neighbor_distances = [dist for _, dist in sorted_distances]
-    print("Neighbor distances")
-    print(neighbor_distances)
-    neighbor_regions = kmeans.predict(scaler.transform(neighbor_centers))
-    print("Neighbor regions")
-    print(neighbor_regions)
 
-    return neighbor_regions.tolist(), neighbor_distances
+    return neighbors, neighbor_distances
 
 
 @router.get("/predict/{region_id}", response_model=AllRegionsResponse)
 async def predict_region(region_id: int):
     try:
-        neighbor_regions, distances = get_neighboring_regions(region_id, 9)
+        neighbor_regions, distances = get_neighboring_regions(region_id, 8)
         predictions = []
         
         for idx, region in enumerate(neighbor_regions):
@@ -115,20 +99,18 @@ async def predict_region(region_id: int):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/predict-all/{region_id}", response_model=AllRegionsResponse)
-async def predict_all_regions(region_id: int):
+@router.get("/predict-all", response_model=AllRegionsResponse)
+async def predict_all_regions():
     try:
-        neighbor_regions, distances = get_neighboring_regions(region_id, MAX_REGIONS)
         predictions = []
-        
-        for idx, region in enumerate(neighbor_regions):
+        # For every region, find the demand at that point of time
+        for idx, region in enumerate(range(0, 30)):
             try:
                 result = predictor.predict(int(region))
                 predictions.append(PredictionResponse(
                     region_id=int(region),
                     predicted_pickups=result["prediction"],
                     features=result["features"],
-                    distance=distances[idx],
                 ))
             except Exception as e:
                 logger.warning(e)
@@ -142,5 +124,5 @@ async def predict_all_regions(region_id: int):
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error predicting region {region_id}: {e}")
+        logger.error(f"Error predicting region : {e}")
         raise HTTPException(status_code=500, detail=str(e))

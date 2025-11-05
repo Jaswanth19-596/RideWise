@@ -13,7 +13,7 @@ function App() {
   const [predictionTime, setPredictionTime] = useState('');
   const [loading, setLoading] = useState(false);
   const [regions, setRegions] = useState({});
-  const [viewType, setViewType] = useState('all'); // 'all' or 'selected'
+  const [viewType, setViewType] = useState('all'); // 'all' or 'neighbors'
 
   // Utility function to generate a consistent color for each region
   const getRegionColor = (regionId) => {
@@ -55,9 +55,9 @@ function App() {
     }
   };
 
-  // Fetch predictions when selectedRegion changes (if viewType is 'selected') or when viewType changes
+  // Fetch predictions when selectedRegion changes (if viewType is 'neighbors') or when viewType changes
   useEffect(() => {
-    if (viewType === 'selected' && selectedRegion) {
+    if (viewType === 'neighbors' && selectedRegion) {
       fetchPredictions();
     } else if (viewType === 'all') {
       fetchPredictions();
@@ -98,8 +98,10 @@ function App() {
             All NYC
           </button>
           <button
-            className={`view-button ${viewType === 'selected' ? 'active' : ''}`}
-            onClick={() => setViewType('selected')}
+            className={`view-button ${
+              viewType === 'neighbors' ? 'active' : ''
+            }`}
+            onClick={() => setViewType('neighbors')}
           >
             Closest Regions
           </button>
@@ -195,8 +197,7 @@ function App() {
                     <th>Region</th>
                     <th>Location</th>
                     <th>Pickups</th>
-                    <th>Distance</th>
-                    <th>Status</th>
+                    {viewType === 'neighbors' && <th>Distance</th>}
                   </tr>
                 </thead>
                 <tbody>
@@ -204,7 +205,7 @@ function App() {
                     <tr
                       key={pred.region_id}
                       className={
-                        pred.region_id === selectedRegion ? 'selected' : ''
+                        pred.region_id === selectedRegion ? 'neighbors' : ''
                       }
                       onClick={() => setSelectedRegion(pred.region_id)}
                     >
@@ -213,23 +214,9 @@ function App() {
                       <td className="demand-high">
                         {pred.predicted_pickups?.toFixed(1) || 'N/A'}
                       </td>
-                      <td>{pred.distance || 'N/A'}</td>
-                      <td>
-                        <span
-                          className={`badge ${
-                            pred.features?.is_rush_hour ? 'rush' : ''
-                          }`}
-                        >
-                          {pred.features?.is_rush_hour ? 'Rush' : 'Normal'}
-                        </span>
-                        <span
-                          className={`badge ${
-                            pred.features?.is_weekend ? 'weekend' : ''
-                          }`}
-                        >
-                          {pred.features?.is_weekend ? 'Weekend' : 'Weekday'}
-                        </span>
-                      </td>
+                      {viewType === 'neighbors' && (
+                        <td>{pred.distance || 'N/A'}</td>
+                      )}
                     </tr>
                   ))}
                 </tbody>

@@ -13,7 +13,7 @@ const api = axios.create({
 export const predictionService = {
   getRegions: () => api.get('/regions'),
   predictRegion: (regionId) => api.get(`/predict/${regionId}`),
-  predictAllRegions: (regionId) => api.get(`/predict-all/${regionId}`),
+  predictAllRegions: () => api.get(`/predict-all/`),
 };
 
 export default api;
