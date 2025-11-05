@@ -1,8 +1,7 @@
 import axios from 'axios';
 
-const stage = 'production';
-
-const API_BASE_URL = stage === 'local' ? 'http://localhost:8000/api' : '/api';
+const API_BASE_URL =
+  process.env.NODE_ENV === 'development' ? 'http://localhost:8000/api' : '/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
