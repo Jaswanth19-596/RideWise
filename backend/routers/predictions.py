@@ -99,7 +99,7 @@ async def predict_region(region_id: int):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/predict-all/", response_model=AllRegionsResponse)
+@router.get("/predict-all", response_model=AllRegionsResponse)
 async def predict_all_regions():
     try:
         predictions = []
