@@ -103,7 +103,7 @@ async def predict_region(region_id: int):
 @router.get("/predict-all/{region_id}", response_model=AllRegionsResponse)
 async def predict_all_regions(region_id: int):
     try:
-        neighbor_regions, distances = get_neighboring_regions(region_id, 2)
+        neighbor_regions, distances = get_neighboring_regions(region_id, MAX_REGIONS)
         predictions = []
         
         for idx, region in enumerate(neighbor_regions):
