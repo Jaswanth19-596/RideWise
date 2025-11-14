@@ -2,6 +2,8 @@
 
 RideWise is a full-stack application that predicts taxi demand in New York City 15 minutes in advance. It aims to help drivers optimize their locations, increasing their pickups and revenue.
 
+[https://www.ridewise.live] | [https://github.com/Jaswanth19-596/RideWise]
+
 ## 1. Project Overview
 
 RideWise leverages historical taxi trip data to train a machine learning model that forecasts demand in different regions of NYC. The project includes a React-based frontend to visualize predictions on a map, a FastAPI backend to serve the predictions, and a complete MLOps pipeline for data processing, model training, and deployment.
@@ -15,6 +17,8 @@ RideWise leverages historical taxi trip data to train a machine learning model t
 - **Scalable Architecture**: Containerized services deployed on AWS.
 
 ## 2. Architecture
+
+![RideWise MLOps Architecture Diagram](ProjectArchitecture.png)
 
 The system is composed of the following components:
 
@@ -169,3 +173,9 @@ Contributions are welcome! Please follow these steps:
 ## 16. License
 
 This project is unlicensed. You are free to use, modify, and distribute it.
+
+Note:
+
+1. I've initially deployed the project using Autoscaling group and a load balancer, but keeping the cost in mind I've removed the autoscaling group and the load balancer. Currently, the project runs on a single EC2 instance.
+
+2. This project doesn't have regular data inflow as companies doesn't share the live ride data. The dataset used in this project is from kaggle.
