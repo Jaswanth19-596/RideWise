@@ -56,6 +56,7 @@ df = df.loc[df['pickup_latitude'].between(min_latitude, max_latitude) & df['pick
 
 df = df.drop(columns = ['dropoff_latitude', 'dropoff_longitude', 'fare_amount', 'trip_distance'])
 
+
 df = df.compute()
 
 

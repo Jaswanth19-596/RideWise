@@ -5,8 +5,8 @@ stages:
     deps:
     - path: ridewise/data_ingestion.py
       hash: md5
-      md5: ebce623fd99a27b1ff18c4aaa0ff18b5
-      size: 2487
+      md5: eb2aab47ba1b325495666642e392d365
+      size: 2488
     params:
       params.yaml:
         data_ingestion:
